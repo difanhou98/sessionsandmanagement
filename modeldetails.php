@@ -7,6 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-    
+        <?php
+            $product = $_GET["product_id"];
+            //parameter passing test
+            // if (!empty($product)){
+            //     echo $product;
+            // }
+            // else {
+            //     echo "empty!";
+            // }
+        ?>
 </body>
 </html>
