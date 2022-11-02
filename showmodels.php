@@ -1,24 +1,11 @@
 <?php 
-    require("db.php");
-    $connection = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname);
-
-    if (mysqli_connect_errno()){
-        die(mysqli_connect_error());
-    }
-
+    require("functions.php");
+    
+    use_http();
     //specify query and receive results
-    $product_name_query = "SELECT productName FROM products";
-    $product_name_result = mysqli_query($connection, $product_name_query);
+    $query_str = "SELECT productCode, productName FROM products";
+    $res = $connection->query($query_str);
 
-    if (!$product_name_result){
-        die("Query Failed");
-    }
-
-    if (mysqli_num_rows($product_name_result) != 0){
-        while ($row = mysqli_fetch_assoc($product_name_result)){
-            $product_name[] = $row['productName'];
-        }
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,16 +18,17 @@
 <body>
     <h1>All Models</h1>
     <?php
-        echo "<table>";
+    echo "<ul>";
+    //echo $product;
+    while ($row = $res->fetch_row()){
+        echo "<li>";
+        echo "<a href=\"modeldetails.php?product_id=".$row[0] . "\">" . $row[1] . "</a>";
+        echo "</li>";
+    }   
 
-        foreach ($product_name as $product){
-            //echo $product;
-            echo "<tr><td>";
-            echo "<a href=\"modeldetails.php?product_id=". $product . "\">" . $product . "</a>";
-            echo "</td></tr>";
-        }
-
-        echo "</table>";
+    echo "</ul>";
+    $res->free_result();
+    $db->close();
     ?>
 </body>
 </html>

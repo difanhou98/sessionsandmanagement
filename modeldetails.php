@@ -1,3 +1,7 @@
+<?php 
+include('functions.php');
+use_http();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,15 +11,26 @@
     <title>Document</title>
 </head>
 <body>
-        <?php
-            $product = $_GET["product_id"];
-            //parameter passing test
-            // if (!empty($product)){
-            //     echo $product;
-            // }
-            // else {
-            //     echo "empty!";
-            // }
-        ?>
+<?php
+
+$id = trim($_GET['product_id']);
+$query_str =   "SELECT * 
+                FROM products 
+                WHERE productCode = ?"; 
+$stmt = $connection->prepare($query_str);
+$stmt->bind_param('s',$id);
+$stmt->execute();
+$stmt->bind_result($prCode,$prName,$prLine,$prScale,$prVendor,$prDesc,$prQ,$prPrice,$MSRP);;
+
+if($stmt->fetch()) {
+	echo "<h3>$prName</h3>\n";
+	echo "<p>Category: $prLine, Scale: $prScale, Vendor: $prVendor, Price: \$$prPrice</p>\n";
+	echo "<p>Description: $prDesc</p>\n";
+	}
+
+$stmt->free_result();
+
+// add user/visitor action here
+?>
 </body>
 </html>
