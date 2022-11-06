@@ -1,6 +1,9 @@
 <?php 
 include('functions.php');
+
 use_http();
+error_reporting(E_ALL);
+ini_set('display_errors',1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +16,8 @@ use_http();
 <body>
 <?php
 
-$id = trim($_GET['product_id']);
+$id = $_GET['product_id'];
+// echo $id;
 $query_str =   "SELECT * 
                 FROM products 
                 WHERE productCode = ?"; 
@@ -26,11 +30,28 @@ if($stmt->fetch()) {
 	echo "<h3>$prName</h3>\n";
 	echo "<p>Category: $prLine, Scale: $prScale, Vendor: $prVendor, Price: \$$prPrice</p>\n";
 	echo "<p>Description: $prDesc</p>\n";
-	}
-
+}
 $stmt->free_result();
 
-// add user/visitor action here
+//echo $id;
+if (!is_in_watchlist($id)){
+    echo "<form action=\"addtowatchlist.php\" method=\"POST\">";
+    echo "<input type=\"hidden\" name=\"item_to_add\" value=$id>\n";
+    echo "<input type=\"submit\" value=\"Add To Watchlist\">";
+    echo "</form>";
+    $stmt->free_result();
+}
+else {
+    echo "this model has been added into watchlist previously";
+}
+
+// echo "<form action=\"addtowatchlist.php\" method=\"POST\">";
+// echo "<input type=\"hidden\" name=\"item_to_add\" value=$id>\n";
+// echo "<input type=\"submit\" value=\"Add To Watchlist\">";
+// echo "</form>";
+
+$stmt->free_result();
+$connection->close();
 ?>
 </body>
 </html>

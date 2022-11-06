@@ -1,6 +1,6 @@
 <?php 
     require("functions.php");
-    
+
     use_http();
     //specify query and receive results
     $query_str = "SELECT productCode, productName FROM products";
@@ -28,7 +28,7 @@
 
     echo "</ul>";
     $res->free_result();
-    $db->close();
+    $connection->close();
     ?>
 </body>
 </html>

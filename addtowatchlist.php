@@ -1,12 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<?php
+include("functions.php");
+//get product id from modeldetails.php's addtowatchlist button
+$productCode = !empty($_POST['item_to_add']) ? $_POST['item_to_add']: "";
+
+if(!isset($_SESSION['valid_user'])) {
+	$_SESSION['callback_url'] = 'addtowatchlist.php';
+	$_SESSION['productCode'] = $productCode;
+	direct_to('login.php');
+} 
+
+
+$email = $_SESSION['valid_user'];
+
+if (isset($_SESSION['callback_url']) && $_SESSION['callback_url'] == 'addtowatchlist.php') {
+	$productCode = $_SESSION['productCode'];
+	unset($_SESSION['callback_url'],$_SESSION['productCode']);
     
-</body>
-</html>
+}
+//direct_to("showwatchlist.php");
+$message = "";
+if (!is_in_watchlist($productCode)){
+    $query = "INSERT INTO watchlist (email, productCode) VALUES (?,?)";
+    $stmt = $connection->prepare($query);
+    if ($stmt != false){
+        $stmt->bind_param("ss", $email, $productCode);
+        $stmt->execute();
+        echo "success";
+    }
+    else {
+        echo "failed";
+    }
+    $message = "saved";
+    
+}
+
+?>
