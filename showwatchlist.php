@@ -1,11 +1,11 @@
 <?php
 require("functions.php");
+include("nav.php");
 
-if(!isset($_SESSION['valid_user'])) {
+if(!isset($_SESSION['valid_user']) || empty($_SESSION['valid_user'])) {
 	$_SESSION['callback_url'] = 'showwatchlist.php';
 	direct_to('login.php');
 } 
-
 $email = $_SESSION['valid_user'];
 //clear callback_url for future use
 if (isset($_SESSION['callback_url']) && $_SESSION['callback_url'] == 'showwatchlist.php') {
@@ -24,6 +24,7 @@ $res = $connection->query($query);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
@@ -33,7 +34,7 @@ echo "<ul>";
 
 while ($row = $res->fetch_row()){
     echo "<li>";
-    echo "<a href=\"modeldetails.php?product_id=".$row[0] . "\">" . $row[1] . "</a>";
+    echo "<a class=\"model-link\" href=\"modeldetails.php?product_id=".$row[0] . "\">" . $row[1] . "</a>";
     echo "</li>";
 }   
 

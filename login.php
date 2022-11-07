@@ -1,6 +1,6 @@
 <?php 
 include("functions.php");
-
+include("nav.php");
 //use_https();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -10,13 +10,13 @@ if (!isset($_POST['submit'])){
 else {
     $email = !empty($_POST['email']) ? trim($_POST["email"]) : "";
     $password = !empty($_POST['password']) ? trim($_POST['password']) : "";
-
+    // query
     $query = "SELECT email,password FROM users WHERE email = ?";
     $stmt = $connection->prepare($query);
 	$stmt->bind_param('s',$email);
 	$stmt->execute();
 	$stmt->bind_result($email2,$pass2_hash);
-
+    // verify password and store callback if not logged in
     if($stmt->fetch() && password_verify($password, $pass2_hash)){
         $_SESSION['valid_user'] = $email;
         $callback_url = "index.php";
@@ -38,24 +38,30 @@ $connection->close();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
-    <form action="login.php" method="POST"> 
-        <div class="login-item">
+    <form class="form-container" action="login.php" method="POST"> 
+        <div class="form-item">
             <label for="email">Email: </label>
             <input type="text" id="email" name="email" value="">
         </div>
 
-        <div class="login-item">
+        <div class="form-item">
             <label for="password">Password: </label>
             <input type="text" id="email" name="password" value="">
         </div>
-
-        <input type="submit" value="submit" name="submit">
-
-        <div>
-            <a href="register.php">Register Here</a>
+        <div class="form-item button">
+            <input  type="submit" value="submit" name="submit">
+        </div>
+        <?php 
+        if (!empty($message)){
+            echo "<p>". $message . "</p>";
+        }
+        ?>
+        <div class="form-item">
+            <a class="button" href="register.php">Register Here</a>
         </div>
 
     </form>

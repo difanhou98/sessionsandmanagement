@@ -1,9 +1,7 @@
 <?php
 session_start();
 $connection =  connect('localhost', 'root', '', 'classicmodels');
-if (isset($connection)){
-echo "connection established";
-}
+
 function use_http(){
     if(isset($_SERVER['HTTPS']) &&  $_SERVER['HTTPS']== "on") {
         header("Location: http://" . $_SERVER['HTTP_HOST'] .
@@ -50,7 +48,9 @@ function is_in_watchlist($product_id){
             return ($stmt->fetch() && $count > 0);
         }
     }
+    if (!empty($stmt)){
     $stmt->free_result();
+    }
     return false;
 }
 

@@ -1,5 +1,6 @@
 <?php 
 include('functions.php');
+include("nav.php");
 
 use_http();
 error_reporting(E_ALL);
@@ -11,6 +12,7 @@ ini_set('display_errors',1);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
@@ -34,6 +36,7 @@ if($stmt->fetch()) {
 $stmt->free_result();
 
 //echo $id;
+//display addtowatchlist button only if item not in watchlist
 if (!is_in_watchlist($id)){
     echo "<form action=\"addtowatchlist.php\" method=\"POST\">";
     echo "<input type=\"hidden\" name=\"item_to_add\" value=$id>\n";
@@ -41,14 +44,10 @@ if (!is_in_watchlist($id)){
     echo "</form>";
     $stmt->free_result();
 }
+//show message if model has been added into watchlist before
 else {
     echo "this model has been added into watchlist previously";
 }
-
-// echo "<form action=\"addtowatchlist.php\" method=\"POST\">";
-// echo "<input type=\"hidden\" name=\"item_to_add\" value=$id>\n";
-// echo "<input type=\"submit\" value=\"Add To Watchlist\">";
-// echo "</form>";
 
 $stmt->free_result();
 $connection->close();
